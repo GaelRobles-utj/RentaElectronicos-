@@ -1,0 +1,168 @@
+
+@extends('layouts.app')
+
+@section('title', 'Editar categoría | RentaElectrónicos')
+
+@section('content')
+<div class="mx-auto max-w-4xl space-y-6">
+
+    <div>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+            Editar categoría
+        </h1>
+
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            Modifica la información de la categoría #{{ $categoria->id }}.
+        </p>
+    </div>
+
+    @if(session('success'))
+        <div class="rounded-lg bg-green-100 p-4 text-sm text-green-800 dark:bg-green-900 dark:text-green-200">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="rounded-lg bg-red-100 p-4 text-sm text-red-800 dark:bg-red-900 dark:text-red-200">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="rounded-lg bg-red-100 p-4 text-sm text-red-800 dark:bg-red-900 dark:text-red-200">
+            <ul class="list-inside list-disc">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+
+        <form
+            action="{{ route('categorias.update', $categoria->id) }}"
+            method="POST"
+            enctype="multipart/form-data"
+            class="space-y-6">
+
+            @csrf
+            @method('PUT')
+
+            <div>
+                <label for="nombre"
+                       class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+                    Nombre de la categoría *
+                </label>
+
+                <input
+                    type="text"
+                    id="nombre"
+                    name="nombre"
+                    value="{{ old('nombre', $categoria->nombre) }}"
+                    maxlength="100"
+                    required
+                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+
+                @error('nombre')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+                    Imagen actual
+                </label>
+
+                @if($categoria->imagen)
+                    @php
+                        $imagenUrl = filter_var($categoria->imagen, FILTER_VALIDATE_URL)
+                            ? $categoria->imagen
+                            : asset('storage/' . ltrim(str_replace('storage/', '', $categoria->imagen), '/'));
+                    @endphp
+
+                    <img
+                        src="{{ $imagenUrl }}"
+                        alt="Imagen de {{ $categoria->nombre }}"
+                        class="mb-4 h-24 w-24 rounded-lg border border-gray-200 object-cover dark:border-gray-600">
+                @else
+                    <p class="mb-4 text-sm text-gray-500 dark:text-gray-400">
+                        Esta categoría todavía no tiene imagen.
+                    </p>
+                @endif
+
+                <label for="imagen"
+                       class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+                    Seleccionar nueva imagen
+                </label>
+
+                <input
+                    type="file"
+                    id="imagen"
+                    name="imagen"
+                    accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                    class="block w-full cursor-pointer rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300">
+
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    JPG, JPEG, PNG o WebP. Máximo 2 MB.
+                    Déjalo vacío para conservar la imagen actual.
+                </p>
+
+                @error('imagen')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label for="estado"
+                       class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+                    Estado *
+                </label>
+
+                <select
+                    id="estado"
+                    name="estado"
+                    required
+                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+
+                    <option value="1"
+                        {{ old('estado', (string) $categoria->estado) === '1' ? 'selected' : '' }}>
+                        Activa
+                    </option>
+
+                    <option value="0"
+                        {{ old('estado', (string) $categoria->estado) === '0' ? 'selected' : '' }}>
+                        Inactiva
+                    </option>
+                </select>
+
+                @error('estado')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="flex flex-wrap gap-3 border-t border-gray-200 pt-5 dark:border-gray-700">
+
+                <button
+                    type="submit"
+                    class="rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-300">
+                    Guardar cambios
+                </button>
+
+                <a
+                    href="{{ route('categorias.show', $categoria->id) }}"
+                    class="rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700">
+                    Ver categoría
+                </a>
+
+                <a
+                    href="{{ route('categorias.listado') }}"
+                    class="rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700">
+                    Volver al listado
+                </a>
+            </div>
+
+        </form>
+    </div>
+</div>
+@endsection
