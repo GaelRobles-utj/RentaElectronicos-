@@ -42,6 +42,7 @@ class AdministradorController extends Controller
                 ->withInput($request->except(['contrasena', 'imagen']));
         }
 
+
         $administrador = new Administrador();
         $administrador->nombres = $request->input('nombres');
         $administrador->apellidos = $request->input('apellidos');

@@ -1,3 +1,4 @@
+
 <aside
     id="logo-sidebar"
     class="fixed left-0 top-0 z-40 h-screen w-72
@@ -31,10 +32,11 @@
             General
         </p>
 
-        <a href="/"
+        <a href="{{ route('dashboard') }}"
            class="mb-6 flex items-center gap-3 rounded-xl bg-blue-600
                   px-4 py-3 text-sm font-medium text-white
                   shadow-md shadow-blue-950/20">
+
             <span class="flex h-8 w-8 items-center justify-center rounded-lg
                          bg-white/15">
                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -91,17 +93,16 @@
 
                     </a>
 
-                    
-<a href="{{ $module['slug'] === 'administradores'
-            ? route('administradores.create')
-            : '/' . $module['slug'] . '/formulario' }}"
-   title="Nuevo registro: {{ $module['name'] }}"
-   aria-label="Nuevo registro: {{ $module['name'] }}"
-   class="flex h-8 w-8 shrink-0 items-center justify-center
-          rounded-lg text-lg text-slate-400
-          transition hover:bg-blue-600 hover:text-white">
-    +
-</a>
+                    <a href="{{ $module['slug'] === 'administradores'
+                                ? route('administradores.create')
+                                : '/' . $module['slug'] . '/formulario' }}"
+                       title="Nuevo registro: {{ $module['name'] }}"
+                       aria-label="Nuevo registro: {{ $module['name'] }}"
+                       class="flex h-8 w-8 shrink-0 items-center justify-center
+                              rounded-lg text-lg text-slate-400
+                              transition hover:bg-blue-600 hover:text-white">
+                        +
+                    </a>
 
                 </div>
             @endforeach
@@ -121,6 +122,39 @@
             </p>
 
         </div>
+
+        {{-- CERRAR SESIÓN --}}
+        @auth('admin')
+            <div class="mt-6 border-t border-slate-800 pt-5">
+
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+
+                    <button
+                        type="submit"
+                        class="flex w-full items-center gap-3 rounded-lg
+                               px-3 py-3 text-sm font-medium text-slate-300
+                               transition hover:bg-red-500/10
+                               hover:text-red-400">
+
+                        <svg class="h-5 w-5" fill="none"
+                             viewBox="0 0 24 24"
+                             stroke="currentColor" stroke-width="1.8">
+                            <path stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  d="M15.75 9V5.25A2.25 2.25 0 0 0
+                                     13.5 3h-6A2.25 2.25 0 0 0
+                                     5.25 5.25v13.5A2.25 2.25 0 0 0
+                                     7.5 21h6a2.25 2.25 0 0 0
+                                     2.25-2.25V15M18 15l3-3m0 0-3-3m3 3H9"/>
+                        </svg>
+
+                        Cerrar sesión
+                    </button>
+                </form>
+
+            </div>
+        @endauth
 
     </div>
 

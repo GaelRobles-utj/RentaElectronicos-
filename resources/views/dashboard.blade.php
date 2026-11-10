@@ -5,10 +5,25 @@
 
 @section('content')
 
-    <section class="mb-8">
-        <p class="text-sm font-medium text-blue-600">
+        @auth('admin')
+    <div class="mb-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+
+        <p class="text-sm font-bold uppercase tracking-wider text-blue-700">
             BIENVENIDO AL SISTEMA
         </p>
+
+        <h2 class="mt-2 text-2xl font-bold text-slate-900">
+            
+            {{ auth('admin')->user()->nombres }}
+            {{ auth('admin')->user()->apellidos }}
+        </h2>
+
+        <p class="mt-2 text-sm text-slate-600">
+            Has iniciado sesión correctamente en RentaElectrónicos.
+        </p>
+
+    </div>
+@endauth
 
         <h1 class="mt-2 text-3xl font-bold tracking-tight text-slate-900">
             Administra tu negocio
